@@ -16,3 +16,5 @@ while not env.isEnd():
         responses.append((player[x[1]].make_action(x[0]),x[1]))
     env.step(responses)
 ```
+
+这里的player你可以使用各种方式进行实现，比如用socket/pipe之类的就可以把player做到单独的文件里面了
