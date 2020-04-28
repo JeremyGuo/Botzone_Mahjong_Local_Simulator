@@ -90,7 +90,7 @@ class MahjongEnvironment(Environment):
                     self.disc_tile = action[i][0][5:7]
                     if self.hand[player_id].count(self.disc_tile) < 4:
                         raise BaseException(f"{player_id} 试图gang他没有的牌")
-                    for i in range(4): self.hand[player_id].pop(self.hand[player_id].index(self.disc_tile))
+                    for j in range(4): self.hand[player_id].pop(self.hand[player_id].index(self.disc_tile))
                     self.pack[player_id].append(("GANG", self.disc_tile, 0))
                     return
                 elif action[i][0][:4] == "BUGANG":
@@ -170,8 +170,11 @@ class MahjongEnvironment(Environment):
                     self.pack[player_id].append(("PENG", self.disc_tile, (player_id-self.player_id+4)%4))
                     if self.hand[player_id].count(self.disc_tile) < 2:
                         raise BaseException(f"{player_id} 试图peng他没有的牌")
-                    for i in range(2): self.hand[player_id].pop(self.hand[player_id].index(self.disc_tile))
-                    self.disc_tile = action[i][0][5:7]
+                    for j in range(2): self.hand[player_id].pop(self.hand[player_id].index(self.disc_tile))
+                    self.disc_tile = action[i][0].split(' ')[1]
+                    if self.hand[player_id].count(self.disc_tile) == 0:
+                        raise BaseException(f"{player_id} 试图在peng的时候discard他没有的牌")
+                    self.hand[player_id].pop(self.hand[player_id].index(self.disc_tile))
                     self.player_id = player_id
                     self.game_state = "PENGED"
                     return
@@ -180,7 +183,7 @@ class MahjongEnvironment(Environment):
                     self.pack[player_id].append(("GANG", self.disc_tile, (player_id-self.player_id+4)%4))
                     if self.hand[player_id].count(self.disc_tile) < 3:
                         raise BaseException(f"{player_id} 试图gang他没有的牌")
-                    for i in range(3): self.hand[player_id].pop(self.hand[player_id].index(self.disc_tile))
+                    for j in range(3): self.hand[player_id].pop(self.hand[player_id].index(self.disc_tile))
                     self.disc_tile = ""
                     self.player_id = -1
                     self.game_state = "GANGED"
@@ -343,7 +346,7 @@ class MahjongEnvironment(Environment):
             某人刚刚进行了一次碰牌
             '''
             self.prev_player = self.player_id
-            self.game_state = "NEED_PASS"
+            self.game_state = "PLAYED_WAITING"
             ret = []
             for i in range(4):
                 ret.append((f"3 {self.player_id} PENG {self.disc_tile}", i))
@@ -354,7 +357,7 @@ class MahjongEnvironment(Environment):
             某人刚刚吃了一下
             '''
             self.prev_player = self.player_id
-            self.game_state = "NEED_PASS"
+            self.game_state = "PLAYED_WAITING"
             ret = []
             for i in range(4):
                 ret.append((f"3 {self.player_id} CHI {self.chi_tile} {self.disc_tile}", i))
