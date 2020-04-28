@@ -1,8 +1,17 @@
 # BOTZONE MAHJONG LOCAL SIMULATOR
 
-注意，整个操作模式基本和BOTZONE在线平台上相同，但是全部按照simple input的方式进行
+注意，整个操作模式基本和BOTZONE在线平台上相同，但是全部按照**"长时运行"**的方式进行
 
 在运行过程中进行的非法操作会被raise出来。
+
+## 输入Example
+
+这里提供一个Example
+
+```
+{"requests":["0 0 0"]}
+1 0 0 0 0 W1 W1 W1 W2 W2 W2 W3 W3 W3 W4 W4 W4 W5
+```
 
 ## Example
 
@@ -18,3 +27,5 @@ while not env.isEnd():
 ```
 
 这里的player你可以使用各种方式进行实现，比如用socket/pipe之类的就可以把player做到单独的文件里面了
+
+这里只提供本地评测的环境（如果你用的python那你就爽了）
