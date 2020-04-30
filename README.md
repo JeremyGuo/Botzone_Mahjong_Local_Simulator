@@ -30,9 +30,14 @@ while not env.isEnd():
 
 这里只提供本地评测的环境（如果你用的python那你就爽了）
 
+
 ### 用到的库
 
 numpy、MahjongGB(https://github.com/ailab-pku/Chinese-Standard-Mahjong)
+
+## 注意
+
+只经过少量测试
 
 ### contrib
 
