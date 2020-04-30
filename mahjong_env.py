@@ -2,7 +2,7 @@ import numpy as np
 import json
 import copy
 from MahjongGB import MahjongFanCalculator
-from source2.env import Environment
+from env import Environment
 
 def prevTile(x):
     tile_id = int(x[1:2])
@@ -48,7 +48,7 @@ class MahjongEnvironment(Environment):
                                 len(self.flower[player_id]),
                                 False,
                                 self.desk.count(self.disc_tile) == 3,
-                                True, # 这里没完全理解到这个参数啥意思。。
+                                False, # 这里没完全理解到这个参数啥意思。。
                                 len(self.wall) == 0,
                                 player_id,
                                 self.wind
@@ -120,7 +120,7 @@ class MahjongEnvironment(Environment):
                             len(self.flower[player_id]),
                             True,
                             self.desk.count(self.last_draw) == 3,
-                            False, # 这里我没想好怎么判断是否是杠上开花
+                            self.ganged == 1,
                             len(self.wall) == 0,
                             player_id,
                             self.wind
@@ -198,13 +198,13 @@ class MahjongEnvironment(Environment):
                     out_tile = action[i][0][7:9]
                     self.hand[player_id].append(self.disc_tile)
                     if self.hand[player_id].count(out_tile) == 0:
-                        raise BaseException(f"{player_id} 试图使用他没有的牌")
+                        raise BaseException(f"{player_id} 试图使用他没有的牌 {out_tile}")
                     if self.hand[player_id].count(chi_tile) == 0:
-                        raise BaseException(f"{player_id} 试图使用他没有的牌")
+                        raise BaseException(f"{player_id} 试图使用他没有的牌 {chi_tile}")
                     if self.hand[player_id].count(prevTile(chi_tile)) == 0:
-                        raise BaseException(f"{player_id} 试图使用他没有的牌")
+                        raise BaseException(f"{player_id} 试图使用他没有的牌 {prevTile(chi_tile)}")
                     if self.hand[player_id].count(backTile(chi_tile)) == 0:
-                        raise BaseException(f"{player_id} 试图使用他没有的牌")
+                        raise BaseException(f"{player_id} 试图使用他没有的牌 {backTile(chi_tile)}")
                     self.hand[player_id].pop(self.hand[player_id].index(out_tile))
                     self.hand[player_id].pop(self.hand[player_id].index(chi_tile))
                     self.hand[player_id].pop(self.hand[player_id].index(prevTile(chi_tile)))
@@ -270,6 +270,7 @@ class MahjongEnvironment(Environment):
         self.prev_player = 3 # 表示谁上一次打出了最后一张牌
         self.round = 0
         self.desk = []
+        self.ganged = 10 # 随便设一个不可能的表示当前和GANG间隔了多少回合
     
     def getEnvironment(self):
         return (self.hand, self.wall)
@@ -285,6 +286,7 @@ class MahjongEnvironment(Environment):
                 [("0 0 1",id), ("0 1 1",id), ("0 2 1",id), ("0 3 1",id)]
                 分别表示返回给四个bot的信息，其中id对应了这个信息要返回给哪一个bot
         '''
+        self.ganged += 1
         if len(self.wall) == 0:
             self.result = -1
             self.is_end = True
@@ -340,6 +342,7 @@ class MahjongEnvironment(Environment):
             ret = []
             for i in range(4):
                 ret.append((f"3 {self.player_id} GANG", i))
+            self.ganged = 0
             return ret
         elif self.game_state == "PENGED":
             '''
@@ -383,6 +386,7 @@ class MahjongEnvironment(Environment):
             ret = []
             for i in range(4):
                 ret.append((f"3 {self.player_id} BUGANG {self.disc_tile}", i))
+            self.ganged = 0
             return ret
         
     def isEnd(self):
