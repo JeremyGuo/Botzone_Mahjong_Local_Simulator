@@ -13,6 +13,12 @@
 1 0 0 0 0 W1 W1 W1 W2 W2 W2 W3 W3 W3 W4 W4 W4 W5
 ```
 
+## Agent
+
+我们可以使用目录下的Agent和./ais/{name}/下的bot进行交互
+
+具体为访问 main.py / main / main.exe 在MacOS/Windows上均可使用
+
 ## Example
 
 ``` python
@@ -33,7 +39,8 @@ while not env.isEnd():
 
 ### 用到的库
 
-numpy、MahjongGB(https://github.com/ailab-pku/Chinese-Standard-Mahjong)
+MahjongGB(https://github.com/ailab-pku/Chinese-Standard-Mahjong)
+详见requirement.txt
 
 ## 注意
 
@@ -42,3 +49,4 @@ numpy、MahjongGB(https://github.com/ailab-pku/Chinese-Standard-Mahjong)
 ### contrib
 
 JeremyGuo
+Hineven

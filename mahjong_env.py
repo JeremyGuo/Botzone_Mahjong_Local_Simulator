@@ -2,7 +2,6 @@ import numpy as np
 import json
 import copy
 from MahjongGB import MahjongFanCalculator
-from env import Environment
 
 def prevTile(x):
     tile_id = int(x[1:2])
@@ -12,9 +11,8 @@ def backTile(x):
     tile_id = int(x[1:2])
     return x[0:1] + str(tile_id+1)
 
-class MahjongEnvironment(Environment):
+class MahjongEnvironment:
     def __init__(self):
-        super().__init__()
         self.is_end = True
         self.result = -1
     
